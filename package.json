@@ -1,0 +1,12 @@
+{
+  "name": "@notify-watcher/watchers",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/notify-watcher/watchers.git",
+  "author": "Nicolás Gebauer <negebauerm@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
