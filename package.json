@@ -3,7 +3,22 @@
   "version": "0.0.1",
   "main": "index.js",
   "repository": "https://github.com/notify-watcher/watchers.git",
-  "author": "Nicolás Gebauer <negebauerm@gmail.com>",
+  "author": {
+    "name": "Nicolás Gebauer",
+    "email": "negebauerm@gmail.com",
+    "url": "https://negebauer.com"
+  },
+  "contributors": [
+    {
+      "name": "Sebastian Salata",
+      "email": "sa.salatart@gmail.com",
+      "url": "https://salatart.com"
+    },
+    {
+      "name": "Francisco Sandoval",
+      "email": "franciscosandoval15@gmail.com"
+    }
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
