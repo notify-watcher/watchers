@@ -6,7 +6,21 @@
   "author": "Nicolás Gebauer <negebauerm@gmail.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.18.2"
+  },
+  "peerDependencies": {
+    "eslint-plugin-import": "^2.18.2"
   }
 }
