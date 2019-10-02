@@ -1,0 +1,13 @@
+{
+  "auth": false,
+  "libs": [
+    "axios",
+    "cheerio"
+  ],
+  "notificationTypes": {
+    "newValue": {
+      "key": "newValue",
+      "description": "When a new value is found"
+    }
+  }
+}
