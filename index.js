@@ -7,9 +7,9 @@ async function executeExampleWatcher() {
     snapshot: {
       a: 1
     }
-  })
-  console.log("new snapshot:", snapshot)
-  console.log("notifications:", notifications)
+  });
+  console.log("new snapshot:", snapshot);
+  console.log("notifications:", notifications);
 }
 
-executeExampleWatcher()
+executeExampleWatcher();
