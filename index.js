@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 const { execute } = require("@notify-watcher/core");
-const watcher = require("./example-watcher");
+const exampleWatcher = require("./example-watcher");
 
-async function tryWatcher() {
-  const { snapshot, notifications } = await execute(watcher, {
+async function executeExampleWatcher() {
+  const { snapshot, notifications } = await execute(exampleWatcher, {
     snapshot: {
       a: 1
     }
@@ -12,4 +12,4 @@ async function tryWatcher() {
   console.log("notifications:", notifications)
 }
 
-tryWatcher()
+executeExampleWatcher()
