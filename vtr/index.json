@@ -1,0 +1,14 @@
+{
+  "auth": false,
+  "libs": [
+    "axios",
+    "cheerio",
+    "lodash"
+  ],
+  "notificationTypes": {
+    "newPlan": {
+      "key": "newPlan",
+      "description": "When a new plan is found"
+    }
+  }
+}
