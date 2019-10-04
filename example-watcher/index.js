@@ -20,7 +20,7 @@ async function watch({ snapshot, libs }) {
   }
 
   // Return new snapshot and notifications to be sent
-  return { snapshot: newData, notifications }
+  return { snapshot: newData, notifications };
 }
 
 module.exports = watch;
