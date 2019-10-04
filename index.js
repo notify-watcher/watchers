@@ -2,11 +2,14 @@
 const { execute } = require("@notify-watcher/core");
 const watcher = require("./example-watcher");
 
-execute(watcher, {
-  latestData: {
-    a: 1
-  },
-  updateData: newData => console.log("newData", newData),
-  submitNotifications: notifications =>
-    console.log("notifications", notifications)
-});
+async function tryWatcher() {
+  const { snapshot, notifications } = await execute(watcher, {
+    snapshot: {
+      a: 1
+    }
+  })
+  console.log("new snapshot:", snapshot)
+  console.log("notifications:", notifications)
+}
+
+tryWatcher()
