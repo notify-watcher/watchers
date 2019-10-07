@@ -1,5 +1,6 @@
-const { notificationTypes } = require("./index.json");
+const config = require("./config");
 
+const GITHUB_AUTH_URL = "https://api.github.com/user";
 const GITHUB_NOTIFICATIONS_URL = "https://api.github.com/notifications";
 const NOTIFICATION_URL_ID_REGEX = /.+\/(\d+)/;
 
@@ -7,12 +8,29 @@ function apiUrlToHtmlUrl(url) {
   return url.replace(/api\./, "").replace(/repos\//, "");
 }
 
+function authHeader(token) {
+  return {
+    Authorization: `bearer ${token}`
+  };
+}
+
+async function checkAuth({ auth: { token }, libs: { axios } }) {
+  try {
+    await axios.get(GITHUB_AUTH_URL, {
+      headers: { ...authHeader(token) }
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 async function watch({ snapshot, auth: { token }, libs: { axios } }) {
   const { ifModifiedSince = "" } = snapshot;
   try {
     const response = await axios.get(GITHUB_NOTIFICATIONS_URL, {
       headers: {
-        Authorization: `bearer ${token}`,
+        ...authHeader(token),
         "If-Modified-Since": ifModifiedSince
       }
     });
@@ -21,7 +39,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
 
     if (data.length > 0) {
       notifications.push({
-        key: notificationTypes.newNotifications.key,
+        key: config.notificationTypes.newNotifications.key,
         message: `You have ${data.length} new notifications`
       });
     }
@@ -33,14 +51,14 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
         repository: { full_name: fullName }
       } = notification;
       // If it's not a recognized notification we'll ignore it
-      if (!notificationTypes[reason]) return;
+      if (!config.notificationTypes[reason]) return;
 
       const updatedOrCreatedMessage =
         url === latestCommentUrl ? "created" : "updated";
       const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
       const idText = id ? `#${id}` : "";
       notifications.push({
-        key: notificationTypes[reason].key,
+        key: config.notificationTypes[reason].key,
         message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
         metadata: {
           url: apiUrlToHtmlUrl(latestCommentUrl),
@@ -78,4 +96,8 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
   }
 }
 
-module.exports = watch;
+module.exports = {
+  config,
+  checkAuth,
+  watch
+};
