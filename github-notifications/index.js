@@ -4,8 +4,11 @@ const GITHUB_AUTH_URL = "https://api.github.com/user";
 const GITHUB_NOTIFICATIONS_URL = "https://api.github.com/notifications";
 const NOTIFICATION_URL_ID_REGEX = /.+\/(\d+)/;
 
-function apiUrlToHtmlUrl(url) {
-  return url.replace(/api\./, "").replace(/repos\//, "");
+async function apiUrlToHtmlUrl(apiUrl, axios) {
+  const {
+    data: { html_url: htmlUrl }
+  } = await axios.get(apiUrl);
+  return htmlUrl;
 }
 
 function authHeader(token) {
@@ -44,28 +47,30 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
       });
     }
 
-    data.forEach(notification => {
-      const {
-        reason,
-        subject: { title, url, latest_comment_url: latestCommentUrl, type },
-        repository: { full_name: fullName }
-      } = notification;
-      // If it's not a recognized notification we'll ignore it
-      if (!config.notificationTypes[reason]) return;
+    await Promise.all(
+      data.map(async notification => {
+        const {
+          reason,
+          subject: { title, url, latest_comment_url: latestCommentUrl, type },
+          repository: { full_name: fullName }
+        } = notification;
+        // If it's not a recognized notification we'll ignore it
+        if (!config.notificationTypes[reason]) return;
 
-      const updatedOrCreatedMessage =
-        url === latestCommentUrl ? "created" : "updated";
-      const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
-      const idText = id ? `#${id}` : "";
-      notifications.push({
-        key: config.notificationTypes[reason].key,
-        message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
-        metadata: {
-          url: apiUrlToHtmlUrl(latestCommentUrl),
-          repository: fullName
-        }
-      });
-    });
+        const updatedOrCreatedMessage =
+          url === latestCommentUrl ? "created" : "updated";
+        const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
+        const idText = id ? `#${id}` : "";
+        notifications.push({
+          key: config.notificationTypes[reason].key,
+          message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
+          metadata: {
+            url: await apiUrlToHtmlUrl(latestCommentUrl || url, axios),
+            repository: fullName
+          }
+        });
+      })
+    );
 
     return {
       snapshot: {
