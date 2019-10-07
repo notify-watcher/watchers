@@ -113,12 +113,11 @@ function extractPlanPrice($, planElem) {
 }
 
 function extractPlanName($, planElem) {
-  // const productName = $(planElem).find('.terms-icon-list > .new-product-wrap > .product-name').text().trim();
+  const productName = $(planElem).find('.terms-icon-list > .new-product-wrap > .product-name').text().trim();
   const omProductName = $(planElem)
     .find("a.om-C2C")[0]
     .attribs["om-productname"].trim();
-  // console.log('ProductName:', productName, '---', omProductName);
-  return omProductName;
+  return omProductName || productName;
 }
 
 function extractPlan($, productElem) {

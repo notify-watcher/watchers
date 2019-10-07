@@ -3,7 +3,19 @@ const { fetchPlans, planEquals } = require("./vtr-plans");
 
 async function watch({ snapshot: previousSnapshot, libs }) {
   const { _, axios, cheerio } = libs;
-  const snapshot = await fetchPlans(axios, cheerio);
+  let snapshot;
+  try {
+    snapshot = await fetchPlans(axios, cheerio);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("vtr error:", error);
+    // TODO: Notify server of the error
+    return {
+      snapshot,
+      notifications: [],
+      error
+    };
+  }
   const newPlans = _.differenceWith(
     snapshot,
     previousSnapshot,
