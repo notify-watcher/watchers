@@ -127,11 +127,11 @@ function extractPlan($, productElem) {
   return { name, price, details };
 }
 
-const url =
+const URL =
   "https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia";
 
 async function fetchPlans(axios, cheerio) {
-  const response = await axios.get(url);
+  const response = await axios.get(URL);
   if (response.status !== 200) return undefined;
   const html = response.data;
   const $ = cheerio.load(html, {
