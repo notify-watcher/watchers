@@ -1,4 +1,15 @@
-const { notificationTypes } = require("./index.json");
+const config = {
+  libs: ["axios", "cheerio"],
+  timeframe: {
+    type: "minute"
+  },
+  notificationTypes: {
+    newValue: {
+      key: "newValue",
+      description: "When a new value is found"
+    }
+  }
+};
 
 async function watch({ snapshot, libs }) {
   const notifications = [];
@@ -14,7 +25,7 @@ async function watch({ snapshot, libs }) {
 
   if (snapshot.a !== newData.a) {
     notifications.push({
-      key: notificationTypes.newValue.key,
+      key: config.notificationTypes.newValue.key,
       message: `a has a new value: ${newData.a}`
     });
   }
@@ -23,4 +34,7 @@ async function watch({ snapshot, libs }) {
   return { snapshot: newData, notifications };
 }
 
-module.exports = watch;
+module.exports = {
+  config,
+  watch
+};
