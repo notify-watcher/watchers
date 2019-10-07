@@ -3,6 +3,7 @@ const { execute } = require("@notify-watcher/core");
 const exampleWatcher = require("./example-watcher");
 const githubNotificationsWatcher = require("./github-notifications");
 const vtrPlansWatcher = require("./vtr");
+const gtdPlansWatcher = require("./gtd");
 
 // eslint-disable-next-line no-unused-vars
 async function watchExample() {
@@ -45,6 +46,15 @@ async function watchVtrPlans() {
   console.log("notifications:", notifications);
 }
 
+// eslint-disable-next-line no-unused-vars
+async function watchGtdPlans() {
+  const { snapshot, notifications } = await execute(gtdPlansWatcher.watch, {
+    snapshot: {}
+  });
+  console.log("new snapshot:", snapshot);
+  console.log("notifications:", notifications);
+}
+
 [
   /* 
     Add other watchWatcher here to develop
@@ -54,4 +64,5 @@ async function watchVtrPlans() {
   // checkAuthGithubNotifications
   // watchGithubNotifications
   // watchVtrPlans
+  // watchGtdPlans
 ].forEach(watch => watch());

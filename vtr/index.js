@@ -1,5 +1,4 @@
 const config = require("./config");
-const { notificationTypes } = require("./config.json");
 const { fetchPlans, planEquals } = require("./vtr-plans");
 
 async function watch({ snapshot: previousSnapshot, libs }) {
@@ -23,7 +22,7 @@ async function watch({ snapshot: previousSnapshot, libs }) {
     (planA, planB) => planEquals(_, planA, planB)
   );
   const notifications = newPlans.map(newPlan => ({
-    key: notificationTypes.newPlan.key,
+    key: config.notificationTypes.newPlan.key,
     message: `VTR has a new plan: ${newPlan.name}`,
   }));
   return { snapshot, notifications };
