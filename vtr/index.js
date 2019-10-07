@@ -1,3 +1,4 @@
+const config = require("./config");
 const { notificationTypes } = require("./index.json");
 const { fetchPlans, planEquals } = require("./vtr-plans");
 
@@ -28,4 +29,7 @@ async function watch({ snapshot: previousSnapshot, libs }) {
   return { snapshot, notifications };
 }
 
-module.exports = watch;
+module.exports = {
+  config,
+  watch
+};
