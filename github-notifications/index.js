@@ -1,0 +1,81 @@
+const { notificationTypes } = require("./index.json");
+
+const GITHUB_NOTIFICATIONS_URL = "https://api.github.com/notifications";
+const NOTIFICATION_URL_ID_REGEX = /.+\/(\d+)/;
+
+function apiUrlToHtmlUrl(url) {
+  return url.replace(/api\./, "").replace(/repos\//, "");
+}
+
+async function watch({ snapshot, auth: { token }, libs: { axios } }) {
+  const { ifModifiedSince = "" } = snapshot;
+  try {
+    const response = await axios.get(GITHUB_NOTIFICATIONS_URL, {
+      headers: {
+        Authorization: `bearer ${token}`,
+        "If-Modified-Since": ifModifiedSince
+      }
+    });
+    const { data, headers } = response;
+    const notifications = [];
+
+    if (data.length > 0) {
+      notifications.push({
+        key: notificationTypes.newNotifications.key,
+        message: `You have ${data.length} new notifications`
+      });
+    }
+
+    data.forEach(notification => {
+      const {
+        reason,
+        subject: { title, url, latest_comment_url: latestCommentUrl, type },
+        repository: { full_name: fullName }
+      } = notification;
+      // If it's not a recognized notification we'll ignore it
+      if (!notificationTypes[reason]) return;
+
+      const updatedOrCreatedMessage =
+        url === latestCommentUrl ? "created" : "updated";
+      const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
+      const idText = id ? `#${id}` : "";
+      notifications.push({
+        key: notificationTypes[reason].key,
+        message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
+        metadata: {
+          url: apiUrlToHtmlUrl(latestCommentUrl),
+          repository: fullName
+        }
+      });
+    });
+
+    return {
+      snapshot: {
+        ifModifiedSince: headers["last-modified"]
+      },
+      notifications
+    };
+  } catch (error) {
+    const {
+      response: { status }
+    } = error;
+    if (status === 304) {
+      // No new notifications
+      return {
+        snapshot,
+        notifications: []
+      };
+    }
+
+    // eslint-disable-next-line no-console
+    console.error("github-notifications error:", error);
+    // TODO: Notify server of the error
+    return {
+      snapshot,
+      notifications: [],
+      error
+    };
+  }
+}
+
+module.exports = watch;
