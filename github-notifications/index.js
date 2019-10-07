@@ -8,12 +8,12 @@ function apiUrlToHtmlUrl(url) {
 }
 
 async function watch({ snapshot, auth: { token }, libs: { axios } }) {
-  const { ifModifiedSince } = snapshot;
+  const { ifModifiedSince = "" } = snapshot;
   try {
     const response = await axios.get(GITHUB_NOTIFICATIONS_URL, {
       headers: {
         Authorization: `bearer ${token}`,
-        "If-Modified-Since": ifModifiedSince || ""
+        "If-Modified-Since": ifModifiedSince
       }
     });
     const { data, headers } = response;
