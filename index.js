@@ -5,26 +5,30 @@ const githubNotificationsWatcher = require("./github-notifications");
 
 // eslint-disable-next-line no-unused-vars
 async function watchExample() {
-  const { snapshot, notifications } = await execute(exampleWatcher, {
-    snapshot: {
-      a: 1
-    }
+  const { snapshot, notifications } = await execute(exampleWatcher.watch, {
+    snapshot: { a: 1 }
   });
   console.log("new snapshot:", snapshot);
   console.log("notifications:", notifications);
 }
 
 // eslint-disable-next-line no-unused-vars
+async function checkAuthGithubNotifications() {
+  const authOk = await execute(githubNotificationsWatcher.checkAuth, {
+    auth: { token: process.env.GITHUB_NOTIFICATIONS_TOKEN }
+  });
+  console.log("authOk:", authOk);
+}
+
+// eslint-disable-next-line no-unused-vars
 async function watchGithubNotifications() {
   const { snapshot, notifications } = await execute(
-    githubNotificationsWatcher,
+    githubNotificationsWatcher.watch,
     {
       snapshot: {
         // ifModifiedSince: "Fri, 04 Oct 2019 21:45:01 GMT"
       },
-      auth: {
-        token: process.env.GITHUB_NOTIFICATIONS_TOKEN
-      }
+      auth: { token: process.env.GITHUB_NOTIFICATIONS_TOKEN }
     }
   );
   console.log("new snapshot:", snapshot);
@@ -36,6 +40,7 @@ async function watchGithubNotifications() {
     Add other watchWatcher here to develop
     Comment to avoid calling
   */
-  // watchExample,
+  // watchExample
+  // checkAuthGithubNotifications
   // watchGithubNotifications
 ].forEach(watch => watch());
