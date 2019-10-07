@@ -31,7 +31,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
     const response = await axios.get(GITHUB_NOTIFICATIONS_URL, {
       headers: {
         ...authHeader(token),
-        "If-Modified-Since": ifModifiedSince || ""
+        "If-Modified-Since": ifModifiedSince
       }
     });
     const { data, headers } = response;
