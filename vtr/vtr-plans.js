@@ -12,16 +12,16 @@
 */
 function extractTelevisionDetails(elemText) {
   const channels = elemText
-    .replace('televisión HD', '')
-    .replace('Ver Canales','')
+    .replace("televisión HD", "")
+    .replace("Ver Canales", "")
     .trim()
-    .split('+');
+    .split("+");
   return {
-    productType: 'television',
+    productType: "television",
     channels: {
-      normal: Number(channels[0].replace('CANALES','').trim()),
-      hd: Number(channels[1].replace('CANALES HD','').trim()),
-    },
+      normal: Number(channels[0].replace("CANALES", "").trim()),
+      hd: Number(channels[1].replace("CANALES HD", "").trim())
+    }
   };
 }
 
@@ -35,12 +35,12 @@ function extractTelevisionDetails(elemText) {
 */
 function extractInternetDetails(elemText) {
   const megabytes = elemText
-    .replace('internet', '')
-    .replace('MEGA','')
+    .replace("internet", "")
+    .replace("MEGA", "")
     .trim();
   return {
-    productType: 'internet',
-    megabytes: Number(megabytes),
+    productType: "internet",
+    megabytes: Number(megabytes)
   };
 }
 
@@ -56,32 +56,32 @@ function extractInternetDetails(elemText) {
 */
 function extractPhoneDetails(elemText) {
   const mobileMinutes = elemText
-    .replace('telefonía ILIMITADO A FIJO +', '')
-    .replace('MIN. A MÓVILES', '')
+    .replace("telefonía ILIMITADO A FIJO +", "")
+    .replace("MIN. A MÓVILES", "")
     .trim();
   return {
-    productType: 'phone',
-    mobileMinutes: Number(mobileMinutes),
+    productType: "phone",
+    mobileMinutes: Number(mobileMinutes)
   };
 }
 
 function extractSingleProductDetails($, itemElem) {
   const $itemElem = $(itemElem);
   const text = $itemElem.text();
-  if ($itemElem.find('i.icon-wifi').length > 0) {
+  if ($itemElem.find("i.icon-wifi").length > 0) {
     return extractInternetDetails(text);
   }
-  if ($itemElem.find('i.icon-television').length > 0) {
+  if ($itemElem.find("i.icon-television").length > 0) {
     return extractTelevisionDetails(text);
   }
-  if ($itemElem.find('small').text() === 'telefonía') {
+  if ($itemElem.find("small").text() === "telefonía") {
     return extractPhoneDetails(text);
   }
   return undefined;
 }
 
 function extractPlanDetails($, planElem) {
-  const liElements = $(planElem).find('.terms-icon-list > li');
+  const liElements = $(planElem).find(".terms-icon-list > li");
   return liElements
     .map((i, itemElem) => extractSingleProductDetails($, itemElem))
     .filter(item => item !== undefined);
@@ -89,61 +89,59 @@ function extractPlanDetails($, planElem) {
 
 function extractPlanPrice($, planElem) {
   const $planElement = $(planElem);
-  let priceString = '';
-  const smallNormalPrice = $planElement.find('small.margin-small-ab');
+  let priceString = "";
+  const smallNormalPrice = $planElement.find("small.margin-small-ab");
   if (
-    smallNormalPrice
-    && !(  // sometimes they hide deprecated or incorrect price tags this way
-      smallNormalPrice[0].attribs.style
-      && smallNormalPrice[0].attribs.style.includes('visibility:hidden')
+    smallNormalPrice &&
+    // sometimes they hide deprecated or incorrect price tags this way
+    !(
+      smallNormalPrice[0].attribs.style &&
+      smallNormalPrice[0].attribs.style.includes("visibility:hidden")
     )
   ) {
     priceString = smallNormalPrice
       .text()
-      .replace('Normal:','')
+      .replace("Normal:", "")
       .trim();
   } else {
     priceString = $planElement
-      .find('.box-plp-price-ab > .price-plp > h5 > strong')
+      .find(".box-plp-price-ab > .price-plp > h5 > strong")
       .text()
       .trim();
   }
-  return Number(
-    priceString
-      .replace('$','')
-      .replace('.','')
-  );
+  return Number(priceString.replace("$", "").replace(".", ""));
 }
 
 function extractPlanName($, planElem) {
   // const productName = $(planElem).find('.terms-icon-list > .new-product-wrap > .product-name').text().trim();
-  const omProductName = $(planElem).find('a.om-C2C')[0].attribs['om-productname'].trim();
+  const omProductName = $(planElem)
+    .find("a.om-C2C")[0]
+    .attribs["om-productname"].trim();
   // console.log('ProductName:', productName, '---', omProductName);
   return omProductName;
 }
 
 function extractPlan($, productElem) {
   const name = extractPlanName($, productElem);
-  const price =  extractPlanPrice($, productElem);
+  const price = extractPlanPrice($, productElem);
   const details = extractPlanDetails($, productElem);
   return { name, price, details };
 }
 
-const url = 'https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia';
+const url =
+  "https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia";
 
 async function fetchPlans(axios, cheerio) {
   const response = await axios.get(url);
-  if(response.status !== 200) return;
+  if (response.status !== 200) return undefined;
   const html = response.data;
   const $ = cheerio.load(html, {
     xml: {
-      normalizeWhitespace: true,
-    },
+      normalizeWhitespace: true
+    }
   });
-  const planElements = $('.vtr-plp.vtr-plp--ab .vtr-plp__body');
-  return planElements
-    .toArray()
-    .map(planElement => extractPlan($, planElement));
+  const planElements = $(".vtr-plp.vtr-plp--ab .vtr-plp__body");
+  return planElements.toArray().map(planElement => extractPlan($, planElement));
 }
 
 // Comparision
@@ -152,20 +150,27 @@ function detailsItemEquals(detailsItemA, detailsItemB) {
   if (detailsItemA === undefined && detailsItemB === undefined) return true;
   if (detailsItemA === undefined || detailsItemB === undefined) return false;
   if (detailsItemA.productType !== detailsItemB.productType) return false;
+  // eslint-disable-next-line default-case
   switch (detailsItemA.productType) {
-    case 'television':
-      return detailsItemA.channels.normal === detailsItemB.channels.normal
-        && detailsItemA.channels.hd === detailsItemB.channels.hd;
-    case 'phone':
+    case "television":
+      return (
+        detailsItemA.channels.normal === detailsItemB.channels.normal &&
+        detailsItemA.channels.hd === detailsItemB.channels.hd
+      );
+    case "phone":
       return detailsItemA.mobileMinutes === detailsItemB.mobileMinutes;
-    case 'internet':
+    case "internet":
       return detailsItemA.megabytes === detailsItemB.megabytes;
   }
+  return false;
 }
 
 function detailsEquals(lodash, detailsA, detailsB) {
   if (detailsA.length !== detailsB.length) return false;
-  const intersection = lodash.intersectionWith([detailsA, detailsB], detailsItemEquals);
+  const intersection = lodash.intersectionWith(
+    [detailsA, detailsB],
+    detailsItemEquals
+  );
   return intersection.length === detailsA.length;
 }
 
@@ -178,5 +183,5 @@ function planEquals(lodash, planA, planB) {
 
 module.exports = {
   fetchPlans,
-  planEquals,
+  planEquals
 };
