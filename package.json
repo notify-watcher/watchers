@@ -1,9 +1,24 @@
 {
   "name": "@notify-watcher/watchers",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "main": "index.js",
   "repository": "https://github.com/notify-watcher/watchers.git",
-  "author": "Nicolás Gebauer <negebauerm@gmail.com>",
+  "author": {
+    "name": "Nicolás Gebauer",
+    "email": "negebauerm@gmail.com",
+    "url": "https://negebauer.com"
+  },
+  "contributors": [
+    {
+      "name": "Sebastian Salata",
+      "email": "sa.salatart@gmail.com",
+      "url": "https://salatart.com"
+    },
+    {
+      "name": "Francisco Sandoval",
+      "email": "franciscosandoval15@gmail.com"
+    }
+  ],
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -13,14 +28,15 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "dependencies": {
+    "@notify-watcher/core": "0.0.2"
+  },
   "devDependencies": {
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^1.18.2"
-  },
-  "peerDependencies": {
-    "eslint-plugin-import": "^2.18.2"
   }
 }
