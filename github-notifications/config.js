@@ -51,6 +51,9 @@ const GITHUB_NOTIFICATIONS = {
 const config = {
   auth: true,
   libs: ["axios"],
+  timeframe: {
+    type: "minute"
+  },
   notificationTypes: {
     ...GITHUB_NOTIFICATIONS,
     newNotifications: {
