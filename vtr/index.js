@@ -23,7 +23,7 @@ async function watch({ snapshot: previousSnapshot, libs }) {
   );
   const notifications = newPlans.map(newPlan => ({
     key: config.notificationTypes.newPlan.key,
-    message: `VTR has a new plan: ${newPlan.name}`,
+    message: `VTR has a new plan: ${newPlan.name}`
   }));
   return { snapshot, notifications };
 }

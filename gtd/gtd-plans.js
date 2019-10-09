@@ -1,8 +1,17 @@
 // GTD plans fetch
 
+const URL = "https://www.gtd.cl/ofertas/ofertas-gtd";
+
+const productTypes = {
+  internet: "internet",
+  phone: "phone",
+  television: "television"
+};
+
+const internetPrefix = "INTERNET FIBRA ÓPTICA";
+const phonePrefix = "TELEFONÍA Plan Minutos Libre";
+
 function extractProductDetails(text) {
-  const internetPrefix = "INTERNET FIBRA ÓPTICA";
-  const phonePrefix = "TELEFONÍA Plan Minutos Libre";
   if (text.startsWith(internetPrefix)) {
     // example: INTERNET FIBRA ÓPTICA 200 Mbps  60 Mbps Incluye Wifi HI Speed y 2 Smart Connect
     const parts = text
@@ -10,7 +19,7 @@ function extractProductDetails(text) {
       .trim()
       .split(" ");
     return {
-      productType: "internet",
+      productType: productTypes.internet,
       megabytes: Number(parts[0])
     };
   }
@@ -21,7 +30,7 @@ function extractProductDetails(text) {
       .trim()
       .split(" ");
     return {
-      productType: "phone",
+      productType: productTypes.phone,
       numbers: Number(parts[0])
     };
   }
@@ -30,7 +39,7 @@ function extractProductDetails(text) {
     const regexp = /TELEVISIÓN ([1-9][0-9]+) Canales Tv\. [\w ]+\(([1-9][0-9]+) Canales\) [\w ]*/g;
     const matches = regexp.exec(text);
     return {
-      productType: "television",
+      productType: productTypes.television,
       channels: {
         normal: Number(matches[1]),
         hd: Number(matches[2])
@@ -50,10 +59,8 @@ function extractProductPrice($, productElem) {
 }
 
 function extractProduct($, packContainer) {
-  if (
-    $(packContainer)[0].attribs.style &&
-    !$(packContainer)[0].attribs.style.includes("visibility: visible")
-  ) {
+  const { attribs } = $(packContainer)[0];
+  if (attribs.style && !attribs.style.includes("visibility: visible")) {
     return undefined;
   }
   const name = $(packContainer)
@@ -74,10 +81,8 @@ function extractProduct($, packContainer) {
   return { name, price, details };
 }
 
-const url = "https://www.gtd.cl/ofertas/ofertas-gtd";
-
 async function fetchPlans(axios, cheerio, lodash) {
-  const response = await axios.get(url);
+  const response = await axios.get(URL);
   if (response.status !== 200) return undefined;
   const html = response.data;
   const $ = cheerio.load(html, {
@@ -105,19 +110,19 @@ function detailsItemEquals(detailsItemA, detailsItemB) {
   if (detailsItemA === undefined && detailsItemB === undefined) return true;
   if (detailsItemA === undefined || detailsItemB === undefined) return false;
   if (detailsItemA.productType !== detailsItemB.productType) return false;
-  // eslint-disable-next-line default-case
   switch (detailsItemA.productType) {
-    case "television":
+    case productTypes.television:
       return (
         detailsItemA.channels.normal === detailsItemB.channels.normal &&
         detailsItemA.channels.hd === detailsItemB.channels.hd
       );
-    case "phone":
+    case productTypes.phone:
       return detailsItemA.numbers === detailsItemB.numbers;
-    case "internet":
+    case productTypes.internet:
       return detailsItemA.megabytes === detailsItemB.megabytes;
+    default:
+      return false;
   }
-  return false;
 }
 
 function detailsEquals(lodash, detailsA, detailsB) {

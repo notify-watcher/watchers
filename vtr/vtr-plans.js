@@ -1,5 +1,14 @@
 // VTR plans fetch
 
+const URL =
+  "https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia";
+
+const productTypes = {
+  internet: "internet",
+  phone: "phone",
+  television: "television"
+};
+
 /*
   Example:
 <li class="custom-bottom-margin-li">
@@ -17,7 +26,7 @@ function extractTelevisionDetails(elemText) {
     .trim()
     .split("+");
   return {
-    productType: "television",
+    productType: productTypes.television,
     channels: {
       normal: Number(channels[0].replace("CANALES", "").trim()),
       hd: Number(channels[1].replace("CANALES HD", "").trim())
@@ -39,7 +48,7 @@ function extractInternetDetails(elemText) {
     .replace("MEGA", "")
     .trim();
   return {
-    productType: "internet",
+    productType: productTypes.internet,
     megabytes: Number(megabytes)
   };
 }
@@ -60,7 +69,7 @@ function extractPhoneDetails(elemText) {
     .replace("MIN. A MÓVILES", "")
     .trim();
   return {
-    productType: "phone",
+    productType: productTypes.phone,
     mobileMinutes: Number(mobileMinutes)
   };
 }
@@ -113,7 +122,10 @@ function extractPlanPrice($, planElem) {
 }
 
 function extractPlanName($, planElem) {
-  const productName = $(planElem).find('.terms-icon-list > .new-product-wrap > .product-name').text().trim();
+  const productName = $(planElem)
+    .find(".terms-icon-list > .new-product-wrap > .product-name")
+    .text()
+    .trim();
   const omProductName = $(planElem)
     .find("a.om-C2C")[0]
     .attribs["om-productname"].trim();
@@ -126,9 +138,6 @@ function extractPlan($, productElem) {
   const details = extractPlanDetails($, productElem);
   return { name, price, details };
 }
-
-const URL =
-  "https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia";
 
 async function fetchPlans(axios, cheerio) {
   const response = await axios.get(URL);
@@ -149,19 +158,19 @@ function detailsItemEquals(detailsItemA, detailsItemB) {
   if (detailsItemA === undefined && detailsItemB === undefined) return true;
   if (detailsItemA === undefined || detailsItemB === undefined) return false;
   if (detailsItemA.productType !== detailsItemB.productType) return false;
-  // eslint-disable-next-line default-case
   switch (detailsItemA.productType) {
-    case "television":
+    case productTypes.television:
       return (
         detailsItemA.channels.normal === detailsItemB.channels.normal &&
         detailsItemA.channels.hd === detailsItemB.channels.hd
       );
-    case "phone":
+    case productTypes.phone:
       return detailsItemA.mobileMinutes === detailsItemB.mobileMinutes;
-    case "internet":
+    case productTypes.internet:
       return detailsItemA.megabytes === detailsItemB.megabytes;
+    default:
+      return false;
   }
-  return false;
 }
 
 function detailsEquals(lodash, detailsA, detailsB) {
