@@ -38,7 +38,7 @@ async function watchGithubNotifications() {
 
 // eslint-disable-next-line no-unused-vars
 async function watchVtrPlans() {
-  const { snapshot, notifications } = await execute(vtrPlansWatcher, {
+  const { snapshot, notifications } = await execute(vtrPlansWatcher.watch, {
     snapshot: {}
   });
   console.log("new snapshot:", snapshot);

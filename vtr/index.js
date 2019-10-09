@@ -1,5 +1,5 @@
 const config = require("./config");
-const { notificationTypes } = require("./index.json");
+const { notificationTypes } = require("./config.json");
 const { fetchPlans, planEquals } = require("./vtr-plans");
 
 async function watch({ snapshot: previousSnapshot, libs }) {
