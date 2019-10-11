@@ -1,11 +1,11 @@
-const config = require("./config");
-const { fetchPlans, planEquals } = require("./vtr-plans");
+const config = require("./config.json");
+const { fetchPlans, planEquals } = require("./gtd-plans");
 
 async function watch({ snapshot: previousSnapshot, libs }) {
   const { _, axios, cheerio } = libs;
   let snapshot;
   try {
-    snapshot = await fetchPlans(axios, cheerio);
+    snapshot = await fetchPlans(axios, cheerio, _);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("vtr error:", error);
@@ -23,7 +23,7 @@ async function watch({ snapshot: previousSnapshot, libs }) {
   );
   const notifications = newPlans.map(newPlan => ({
     key: config.notificationTypes.newPlan.key,
-    message: `VTR has a new plan: ${newPlan.name}`
+    message: `GTD has a new plan: ${newPlan.name}`
   }));
   return { snapshot, notifications };
 }
