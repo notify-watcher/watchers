@@ -1,26 +1,23 @@
-const config = require("./config");
+const config = require('./config');
 
-const GITHUB_AUTH_URL = "https://api.github.com/user";
-const GITHUB_NOTIFICATIONS_URL = "https://api.github.com/notifications";
+const GITHUB_AUTH_URL = 'https://api.github.com/user';
+const GITHUB_NOTIFICATIONS_URL = 'https://api.github.com/notifications';
 const NOTIFICATION_URL_ID_REGEX = /.+\/(\d+)/;
 
-async function apiUrlToHtmlUrl(apiUrl, axios) {
-  const {
-    data: { html_url: htmlUrl }
-  } = await axios.get(apiUrl);
-  return htmlUrl;
+function apiUrlToHtmlUrl(url) {
+  return url.replace(/api\./, '').replace(/repos\//, '');
 }
 
 function authHeader(token) {
   return {
-    Authorization: `bearer ${token}`
+    Authorization: `bearer ${token}`,
   };
 }
 
 async function checkAuth({ auth: { token }, libs: { axios } }) {
   try {
     await axios.get(GITHUB_AUTH_URL, {
-      headers: { ...authHeader(token) }
+      headers: { ...authHeader(token) },
     });
     return true;
   } catch (error) {
@@ -29,13 +26,13 @@ async function checkAuth({ auth: { token }, libs: { axios } }) {
 }
 
 async function watch({ snapshot, auth: { token }, libs: { axios } }) {
-  const { ifModifiedSince = "" } = snapshot;
+  const { ifModifiedSince = '' } = snapshot;
   try {
     const response = await axios.get(GITHUB_NOTIFICATIONS_URL, {
       headers: {
         ...authHeader(token),
-        "If-Modified-Since": ifModifiedSince
-      }
+        'If-Modified-Since': ifModifiedSince,
+      },
     });
     const { data, headers } = response;
     const notifications = [];
@@ -43,60 +40,58 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
     if (data.length > 0) {
       notifications.push({
         key: config.notificationTypes.newNotifications.key,
-        message: `You have ${data.length} new notifications`
+        message: `You have ${data.length} new notifications`,
       });
     }
 
-    await Promise.all(
-      data.map(async notification => {
-        const {
-          reason,
-          subject: { title, url, latest_comment_url: latestCommentUrl, type },
-          repository: { full_name: fullName }
-        } = notification;
-        // If it's not a recognized notification we'll ignore it
-        if (!config.notificationTypes[reason]) return;
+    data.forEach(notification => {
+      const {
+        reason,
+        subject: { title, url, latest_comment_url: latestCommentUrl, type },
+        repository: { full_name: fullName },
+      } = notification;
+      // If it's not a recognized notification we'll ignore it
+      if (!config.notificationTypes[reason]) return;
 
-        const updatedOrCreatedMessage =
-          url === latestCommentUrl ? "created" : "updated";
-        const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
-        const idText = id ? `#${id}` : "";
-        notifications.push({
-          key: config.notificationTypes[reason].key,
-          message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
-          metadata: {
-            url: await apiUrlToHtmlUrl(latestCommentUrl || url, axios),
-            repository: fullName
-          }
-        });
-      })
-    );
+      const updatedOrCreatedMessage =
+        url === latestCommentUrl ? 'created' : 'updated';
+      const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
+      const idText = id ? `#${id}` : '';
+      notifications.push({
+        key: config.notificationTypes[reason].key,
+        message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
+        metadata: {
+          url: apiUrlToHtmlUrl(latestCommentUrl),
+          repository: fullName,
+        },
+      });
+    });
 
     return {
       snapshot: {
-        ifModifiedSince: headers["last-modified"]
+        ifModifiedSince: headers['last-modified'],
       },
-      notifications
+      notifications,
     };
   } catch (error) {
     const {
-      response: { status }
+      response: { status },
     } = error;
     if (status === 304) {
       // No new notifications
       return {
         snapshot,
-        notifications: []
+        notifications: [],
       };
     }
 
     // eslint-disable-next-line no-console
-    console.error("github-notifications error:", error);
+    console.error('github-notifications error:', error);
     // TODO: Notify server of the error
     return {
       snapshot,
       notifications: [],
-      error
+      error,
     };
   }
 }
@@ -104,5 +99,5 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
 module.exports = {
   config,
   checkAuth,
-  watch
+  watch,
 };

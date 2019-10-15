@@ -1,12 +1,12 @@
 // VTR plans fetch
 
 const URL =
-  "https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia";
+  'https://vtr.com/productos/HogarPacks/triple-pack-banda-ancha-television-telefonia';
 
 const productTypes = {
-  internet: "internet",
-  phone: "phone",
-  television: "television"
+  internet: 'internet',
+  phone: 'phone',
+  television: 'television',
 };
 
 /*
@@ -21,16 +21,16 @@ const productTypes = {
 */
 function extractTelevisionDetails(elemText) {
   const channels = elemText
-    .replace("televisión HD", "")
-    .replace("Ver Canales", "")
+    .replace('televisión HD', '')
+    .replace('Ver Canales', '')
     .trim()
-    .split("+");
+    .split('+');
   return {
     productType: productTypes.television,
     channels: {
-      normal: Number(channels[0].replace("CANALES", "").trim()),
-      hd: Number(channels[1].replace("CANALES HD", "").trim())
-    }
+      normal: Number(channels[0].replace('CANALES', '').trim()),
+      hd: Number(channels[1].replace('CANALES HD', '').trim()),
+    },
   };
 }
 
@@ -44,12 +44,12 @@ function extractTelevisionDetails(elemText) {
 */
 function extractInternetDetails(elemText) {
   const megabytes = elemText
-    .replace("internet", "")
-    .replace("MEGA", "")
+    .replace('internet', '')
+    .replace('MEGA', '')
     .trim();
   return {
     productType: productTypes.internet,
-    megabytes: Number(megabytes)
+    megabytes: Number(megabytes),
   };
 }
 
@@ -65,32 +65,32 @@ function extractInternetDetails(elemText) {
 */
 function extractPhoneDetails(elemText) {
   const mobileMinutes = elemText
-    .replace("telefonía ILIMITADO A FIJO +", "")
-    .replace("MIN. A MÓVILES", "")
+    .replace('telefonía ILIMITADO A FIJO +', '')
+    .replace('MIN. A MÓVILES', '')
     .trim();
   return {
     productType: productTypes.phone,
-    mobileMinutes: Number(mobileMinutes)
+    mobileMinutes: Number(mobileMinutes),
   };
 }
 
 function extractSingleProductDetails($, itemElem) {
   const $itemElem = $(itemElem);
   const text = $itemElem.text();
-  if ($itemElem.find("i.icon-wifi").length > 0) {
+  if ($itemElem.find('i.icon-wifi').length > 0) {
     return extractInternetDetails(text);
   }
-  if ($itemElem.find("i.icon-television").length > 0) {
+  if ($itemElem.find('i.icon-television').length > 0) {
     return extractTelevisionDetails(text);
   }
-  if ($itemElem.find("small").text() === "telefonía") {
+  if ($itemElem.find('small').text() === 'telefonía') {
     return extractPhoneDetails(text);
   }
   return undefined;
 }
 
 function extractPlanDetails($, planElem) {
-  const liElements = $(planElem).find(".terms-icon-list > li");
+  const liElements = $(planElem).find('.terms-icon-list > li');
   return liElements
     .map((i, itemElem) => extractSingleProductDetails($, itemElem))
     .filter(item => item !== undefined);
@@ -98,37 +98,37 @@ function extractPlanDetails($, planElem) {
 
 function extractPlanPrice($, planElem) {
   const $planElement = $(planElem);
-  let priceString = "";
-  const smallNormalPrice = $planElement.find("small.margin-small-ab");
+  let priceString = '';
+  const smallNormalPrice = $planElement.find('small.margin-small-ab');
   if (
     smallNormalPrice &&
     // sometimes they hide deprecated or incorrect price tags this way
     !(
       smallNormalPrice[0].attribs.style &&
-      smallNormalPrice[0].attribs.style.includes("visibility:hidden")
+      smallNormalPrice[0].attribs.style.includes('visibility:hidden')
     )
   ) {
     priceString = smallNormalPrice
       .text()
-      .replace("Normal:", "")
+      .replace('Normal:', '')
       .trim();
   } else {
     priceString = $planElement
-      .find(".box-plp-price-ab > .price-plp > h5 > strong")
+      .find('.box-plp-price-ab > .price-plp > h5 > strong')
       .text()
       .trim();
   }
-  return Number(priceString.replace("$", "").replace(".", ""));
+  return Number(priceString.replace('$', '').replace('.', ''));
 }
 
 function extractPlanName($, planElem) {
   const productName = $(planElem)
-    .find(".terms-icon-list > .new-product-wrap > .product-name")
+    .find('.terms-icon-list > .new-product-wrap > .product-name')
     .text()
     .trim();
   const omProductName = $(planElem)
-    .find("a.om-C2C")[0]
-    .attribs["om-productname"].trim();
+    .find('a.om-C2C')[0]
+    .attribs['om-productname'].trim();
   return omProductName || productName;
 }
 
@@ -145,10 +145,10 @@ async function fetchPlans(axios, cheerio) {
   const html = response.data;
   const $ = cheerio.load(html, {
     xml: {
-      normalizeWhitespace: true
-    }
+      normalizeWhitespace: true,
+    },
   });
-  const planElements = $(".vtr-plp.vtr-plp--ab .vtr-plp__body");
+  const planElements = $('.vtr-plp.vtr-plp--ab .vtr-plp__body');
   return planElements.toArray().map(planElement => extractPlan($, planElement));
 }
 
@@ -177,7 +177,7 @@ function detailsEquals(lodash, detailsA, detailsB) {
   if (detailsA.length !== detailsB.length) return false;
   const intersection = lodash.intersectionWith(
     [detailsA, detailsB],
-    detailsItemEquals
+    detailsItemEquals,
   );
   return intersection.length === detailsA.length;
 }
@@ -191,5 +191,5 @@ function planEquals(lodash, planA, planB) {
 
 module.exports = {
   fetchPlans,
-  planEquals
+  planEquals,
 };
