@@ -3,7 +3,7 @@
   "libs": [
     "axios",
     "cheerio",
-    "_"
+    "lodash"
   ],
   "notificationTypes": {
     "newPlan": {
