@@ -29,7 +29,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@notify-watcher/core": "0.0.2"
+    "@notify-watcher/core": "0.1.0"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
