@@ -53,8 +53,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
       // If it's not a recognized notification we'll ignore it
       if (!config.notificationTypes[reason]) return;
 
-      const updatedOrCreatedMessage =
-        url === latestCommentUrl ? 'created' : 'updated';
+      const updatedOrCreatedMessage = url !== latestCommentUrl ? '' : 'comment';
       const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
       const idText = id ? `#${id}` : '';
       notifications.push({
