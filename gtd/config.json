@@ -5,6 +5,10 @@
     "cheerio",
     "lodash"
   ],
+  "timeframe": {
+    "type": "day",
+    "hour": 10
+  },
   "notificationTypes": {
     "newPlan": {
       "key": "newPlan",

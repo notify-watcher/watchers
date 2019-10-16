@@ -7,7 +7,7 @@
   ],
   "timeframe": {
     "type": "day",
-    "hour": "10"
+    "hour": 10
   },
   "notificationTypes": {
     "newPlan": {
