@@ -2,7 +2,7 @@ const config = require('./config');
 const { fetchPlans, planEquals } = require('./vtr-plans');
 
 async function watch({ snapshot: previousSnapshot, libs }) {
-  const { loadsh, axios, cheerio } = libs;
+  const { lodash, axios, cheerio } = libs;
   let snapshot;
   try {
     snapshot = await fetchPlans(axios, cheerio);
@@ -16,10 +16,10 @@ async function watch({ snapshot: previousSnapshot, libs }) {
       error,
     };
   }
-  const newPlans = loadsh.differenceWith(
+  const newPlans = lodash.differenceWith(
     snapshot,
     previousSnapshot,
-    (planA, planB) => planEquals(loadsh, planA, planB),
+    (planA, planB) => planEquals(lodash, planA, planB),
   );
   const notifications = newPlans.map(newPlan => ({
     key: config.notificationTypes.newPlan.key,
