@@ -1,18 +1,8 @@
 /* eslint-disable no-console */
 const { execute } = require('@notify-watcher/core');
-const exampleWatcher = require('./example-watcher');
 const githubNotificationsWatcher = require('./github-notifications');
 const vtrPlansWatcher = require('./vtr');
 const gtdPlansWatcher = require('./gtd');
-
-// eslint-disable-next-line no-unused-vars
-async function watchExample() {
-  const { snapshot, notifications } = await execute(exampleWatcher.watch, {
-    snapshot: { a: 1 },
-  });
-  console.log('new snapshot:', snapshot);
-  console.log('notifications:', notifications);
-}
 
 // eslint-disable-next-line no-unused-vars
 async function checkAuthGithubNotifications() {
@@ -60,7 +50,6 @@ async function watchGtdPlans() {
     Add other watchWatcher here to develop
     Comment to avoid calling
   */
-  // watchExample,
   // checkAuthGithubNotifications,
   // watchGithubNotifications,
   // watchVtrPlans,
