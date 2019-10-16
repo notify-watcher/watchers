@@ -73,9 +73,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
       notifications,
     };
   } catch (error) {
-    const {
-      response: { status },
-    } = error;
+    const { response: { status } = {} } = error;
     if (status === 304) {
       // No new notifications
       return {
