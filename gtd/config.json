@@ -1,4 +1,7 @@
 {
+  "name": "gtd",
+  "displayName": "GTD",
+  "description": "GTD Manquehue plans watcher",
   "auth": false,
   "libs": [
     "axios",
