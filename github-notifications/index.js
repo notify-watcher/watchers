@@ -60,7 +60,9 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
         key: config.notificationTypes[reason].key,
         message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
         metadata: {
-          url: apiUrlToHtmlUrl(latestCommentUrl),
+          url: latestCommentUrl
+            ? apiUrlToHtmlUrl(latestCommentUrl)
+            : apiUrlToHtmlUrl(url),
           repository: fullName,
         },
       });
