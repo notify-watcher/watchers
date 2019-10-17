@@ -49,6 +49,9 @@ const GITHUB_NOTIFICATIONS = {
 };
 
 const config = {
+  name: 'github-notifications',
+  displayName: 'Github Notifications',
+  description: 'Watcher for github notifications',
   auth: true,
   libs: ['axios'],
   timeframe: {
