@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
-const { execute } = require('@notify-watcher/core');
+const { Executor } = require('@notify-watcher/core');
 const githubNotificationsWatcher = require('./github-notifications');
 const vtrPlansWatcher = require('./vtr');
 const gtdPlansWatcher = require('./gtd');
 
+const executor = new Executor();
+
 // eslint-disable-next-line no-unused-vars
 async function checkAuthGithubNotifications() {
-  const authOk = await execute(githubNotificationsWatcher.checkAuth, {
+  const authOk = await executor.run(githubNotificationsWatcher.checkAuth, {
     auth: { token: process.env.GITHUB_NOTIFICATIONS_TOKEN },
   });
   console.log('authOk:', authOk);
@@ -14,7 +16,7 @@ async function checkAuthGithubNotifications() {
 
 // eslint-disable-next-line no-unused-vars
 async function watchGithubNotifications() {
-  const { snapshot, notifications, error = {} } = await execute(
+  const { snapshot, notifications, error = {} } = await executor.run(
     githubNotificationsWatcher.watch,
     {
       snapshot: {
@@ -30,7 +32,7 @@ async function watchGithubNotifications() {
 
 // eslint-disable-next-line no-unused-vars
 async function watchVtrPlans() {
-  const { snapshot, notifications, error } = await execute(
+  const { snapshot, notifications, error = {} } = await executor.run(
     vtrPlansWatcher.watch,
     {
       snapshot: {},
@@ -43,7 +45,7 @@ async function watchVtrPlans() {
 
 // eslint-disable-next-line no-unused-vars
 async function watchGtdPlans() {
-  const { snapshot, notifications, error } = await execute(
+  const { snapshot, notifications, error = {} } = await executor.run(
     gtdPlansWatcher.watch,
     {
       snapshot: {},
