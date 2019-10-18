@@ -14,7 +14,7 @@ async function checkAuthGithubNotifications() {
 
 // eslint-disable-next-line no-unused-vars
 async function watchGithubNotifications() {
-  const { snapshot, notifications } = await execute(
+  const { snapshot, notifications, error = {} } = await execute(
     githubNotificationsWatcher.watch,
     {
       snapshot: {
@@ -25,24 +25,33 @@ async function watchGithubNotifications() {
   );
   console.log('new snapshot:', snapshot);
   console.log('notifications:', notifications);
+  console.log('error.key:', error.key);
 }
 
 // eslint-disable-next-line no-unused-vars
 async function watchVtrPlans() {
-  const { snapshot, notifications } = await execute(vtrPlansWatcher.watch, {
-    snapshot: {},
-  });
+  const { snapshot, notifications, error } = await execute(
+    vtrPlansWatcher.watch,
+    {
+      snapshot: {},
+    },
+  );
   console.log('new snapshot:', snapshot);
   console.log('notifications:', notifications);
+  console.log('error.key:', error.key);
 }
 
 // eslint-disable-next-line no-unused-vars
 async function watchGtdPlans() {
-  const { snapshot, notifications } = await execute(gtdPlansWatcher.watch, {
-    snapshot: {},
-  });
+  const { snapshot, notifications, error } = await execute(
+    gtdPlansWatcher.watch,
+    {
+      snapshot: {},
+    },
+  );
   console.log('new snapshot:', snapshot);
   console.log('notifications:', notifications);
+  console.log('error.key:', error.key);
 }
 
 [

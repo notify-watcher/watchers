@@ -1,3 +1,6 @@
+const {
+  constants: { ERRORS },
+} = require('@notify-watcher/core');
 const config = require('./config');
 
 const GITHUB_AUTH_URL = 'https://api.github.com/user';
@@ -84,9 +87,12 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
       };
     }
 
-    // eslint-disable-next-line no-console
-    console.error('github-notifications error:', error);
-    // TODO: Notify server of the error
+    if (status === 401) {
+      error.key = ERRORS.auth;
+    } else {
+      error.key = ERRORS.other;
+    }
+
     return {
       snapshot,
       notifications: [],
