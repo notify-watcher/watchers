@@ -1,3 +1,7 @@
+const {
+  constants: { TIMEFRAMES },
+} = require('@notify-watcher/core');
+
 const GITHUB_NOTIFICATIONS = {
   assign: {
     key: 'assign',
@@ -55,7 +59,7 @@ const config = {
   auth: true,
   libs: ['axios'],
   timeframe: {
-    type: 'minute',
+    type: TIMEFRAMES.minute,
   },
   notificationTypes: {
     ...GITHUB_NOTIFICATIONS,
