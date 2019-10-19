@@ -21,6 +21,11 @@ const config = {
   },
 };
 
+async function waitAndClick(page, selector) {
+  await page.waitForSelector(selector);
+  await page.click(selector);
+}
+
 async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
   try {
     const browser = await puppeteer.launch({
@@ -35,31 +40,29 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
 
     // this popup hides the buttons, but maybe they'll remove it
     // and this watcher shouldn't fail because it doesn't find it
-    await page.click('#irAUnired').catch(() => { });
+    await page.click('#irAUnired').catch(() => {});
 
-    await page.click('#IdEmpresaRubro_autocomplete');
+    await waitAndClick(page, '#IdEmpresaRubro_autocomplete');
     await page.keyboard.type('Tag Total');
-    await page.waitForSelector('.ui-corner-all');
-    await page.click('.ui-corner-all');
-    await page.click('#express_continuar');
+    await waitAndClick(page, '.ui-corner-all');
+    await waitAndClick(page, '#express_continuar');
 
-    await page.waitForSelector('#ValorIdentificador');
-    await page.click('#ValorIdentificador');
+    await waitAndClick(page, '#ValorIdentificador');
     await page.keyboard.type(rut);
-    await page.click('#express_agregar_cuenta_aceptar');
+    await waitAndClick(page, '#express_agregar_cuenta_aceptar');
 
-    await page.waitForSelector('#express_pagar');
+    // await page.waitForSelector('#express_pagar');
     await Promise.all([
       page.waitForNavigation({
         waitUntil: 'networkidle0',
       }),
-      page.click('#express_pagar'),
+      waitAndClick(page, '#express_pagar'),
     ]);
 
     const span = await page.$('#TotalPagar');
     const text = await page.evaluate(element => element.textContent, span);
     await browser.close();
-    const ballot = text.replace('Total a pagar: $ ', '');
+    const ballot = text.replace('Total a pagar: $', '').trim();
 
     const notifications = [];
     if (ballot !== snapshot.ballot) {
