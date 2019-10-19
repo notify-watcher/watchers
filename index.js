@@ -1,10 +1,20 @@
 /* eslint-disable no-console */
+const util = require('util');
 const { Executor } = require('@notify-watcher/executor');
 const githubNotificationsWatcher = require('./github-notifications');
 const vtrPlansWatcher = require('./vtr');
 const gtdPlansWatcher = require('./gtd');
 
-const executor = new Executor();
+function log(data) {
+  const { error, ...otherData } = data;
+  const errorKey = error && error.key;
+  console.log(
+    util.inspect(
+      { ...otherData, errorKey, error },
+      { showHidden: false, depth: 2 },
+    ),
+  );
+}
 
 // eslint-disable-next-line no-unused-vars
 async function checkAuthGithubNotifications() {
