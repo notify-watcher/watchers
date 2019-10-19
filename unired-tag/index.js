@@ -36,7 +36,6 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
     await page.keyboard.type(rut);
     await waitAndClick(page, '#express_agregar_cuenta_aceptar');
 
-    // await page.waitForSelector('#express_pagar');
     await Promise.all([
       page.waitForNavigation({
         waitUntil: 'networkidle0',
