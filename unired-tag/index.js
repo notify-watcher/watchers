@@ -11,14 +11,15 @@ async function waitAndClick(page, selector) {
 }
 
 async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
+  const browser = await puppeteer.launch({
+    // headless: false,
+    defaultViewport: {
+      width: 1520,
+      height: 1520,
+    },
+  });
+
   try {
-    const browser = await puppeteer.launch({
-      // headless: false,
-      defaultViewport: {
-        width: 1520,
-        height: 1520,
-      },
-    });
     const page = await browser.newPage();
     await page.goto(UNIRED_URL);
 
@@ -45,7 +46,6 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
 
     const span = await page.$('#TotalPagar');
     const text = await page.evaluate(element => element.textContent, span);
-    await browser.close();
     const ballot = text.replace('Total a pagar: $', '').trim();
 
     const notifications = [];
@@ -67,6 +67,8 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
       notifications: [],
       error,
     };
+  } finally {
+    await browser.close();
   }
 }
 
