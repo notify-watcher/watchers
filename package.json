@@ -30,7 +30,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@notify-watcher/core": "^0.2.0",
+    "@notify-watcher/core": "^0.3.0",
     "@notify-watcher/executor": "^0.1.0",
     "puppeteer": "^1.20.0"
   },
