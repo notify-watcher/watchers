@@ -145,7 +145,7 @@ async function fetchPlans(axios, cheerio) {
   return planElements.toArray().map(planElement => extractPlan($, planElement));
 }
 
-// Comparision
+// Comparison
 
 function detailsItemEquals(detailsItemA, detailsItemB) {
   if (detailsItemA === undefined && detailsItemB === undefined) return true;
