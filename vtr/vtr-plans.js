@@ -176,7 +176,8 @@ function detailsItemEquals(detailsItemA, detailsItemB) {
 function detailsEquals(lodash, detailsA, detailsB) {
   if (detailsA.length !== detailsB.length) return false;
   const intersection = lodash.intersectionWith(
-    [detailsA, detailsB],
+    detailsA,
+    detailsB,
     detailsItemEquals,
   );
   return intersection.length === detailsA.length;
