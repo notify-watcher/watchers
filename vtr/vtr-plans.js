@@ -20,16 +20,13 @@ const productTypes = {
   </li>
 */
 function extractTelevisionDetails(elemText) {
-  const channels = elemText
-    .replace('televisión HD', '')
-    .replace('Ver Canales', '')
-    .trim()
-    .split('+');
+  const regexp = /[\w ]* ([1-9][0-9]+) CANALES \+ ([1-9][0-9]+) CANALES HD [\w ]*/g;
+  const channelsInfo = regexp.exec(elemText);
   return {
     productType: productTypes.television,
     channels: {
-      normal: Number(channels[0].replace('CANALES', '').trim()),
-      hd: Number(channels[1].replace('CANALES HD', '').trim()),
+      normal: Number(channelsInfo[1]),
+      hd: Number(channelsInfo[2]),
     },
   };
 }
@@ -43,13 +40,11 @@ function extractTelevisionDetails(elemText) {
   </li>
 */
 function extractInternetDetails(elemText) {
-  const megabytes = elemText
-    .replace('internet', '')
-    .replace('MEGA', '')
-    .trim();
+  const regexp = /[\w ]* ([1-9][0-9]+)[\w ]*/g;
+  const internetInfo = regexp.exec(elemText);
   return {
     productType: productTypes.internet,
-    megabytes: Number(megabytes),
+    megabytes: Number(internetInfo[1]),
   };
 }
 
@@ -64,13 +59,11 @@ function extractInternetDetails(elemText) {
   </li>
 */
 function extractPhoneDetails(elemText) {
-  const mobileMinutes = elemText
-    .replace('telefonía ILIMITADO A FIJO +', '')
-    .replace('MIN. A MÓVILES', '')
-    .trim();
+  const regexp = /[\w ]* \+ ([1-9][0-9]+) MIN. A MÓVILES[\w ]*/g;
+  const mobileInfo = regexp.exec(elemText);
   return {
     productType: productTypes.phone,
-    mobileMinutes: Number(mobileMinutes),
+    mobileMinutes: Number(mobileInfo[1]),
   };
 }
 
