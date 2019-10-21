@@ -8,7 +8,7 @@ async function watch({ snapshot: previousSnapshot, libs }) {
     snapshot = await fetchPlans(axios, cheerio, lodash);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('vtr error:', error);
+    console.error('gtd error:', error);
     // TODO: Notify server of the error
     return {
       snapshot,

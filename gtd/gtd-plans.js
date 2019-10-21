@@ -104,7 +104,7 @@ async function fetchPlans(axios, cheerio, lodash) {
   );
 }
 
-// Comparision
+// Comparison
 
 function detailsItemEquals(detailsItemA, detailsItemB) {
   if (detailsItemA === undefined && detailsItemB === undefined) return true;
@@ -128,7 +128,8 @@ function detailsItemEquals(detailsItemA, detailsItemB) {
 function detailsEquals(lodash, detailsA, detailsB) {
   if (detailsA.length !== detailsB.length) return false;
   const intersection = lodash.intersectionWith(
-    [detailsA, detailsB],
+    detailsA,
+    detailsB,
     detailsItemEquals,
   );
   return intersection.length === detailsA.length;
