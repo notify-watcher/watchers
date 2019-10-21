@@ -22,6 +22,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "dev": "nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
@@ -29,7 +30,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
-    "@notify-watcher/core": "^0.2.0",
+    "@notify-watcher/core": "^0.3.0",
     "@notify-watcher/executor": "^0.1.0"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
+    "nodemon": "^1.19.4",
     "prettier": "^1.18.2"
   }
 }
