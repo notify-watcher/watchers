@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { Executor } = require('@notify-watcher/core');
+const { Executor } = require('@notify-watcher/executor');
 const githubNotificationsWatcher = require('./github-notifications');
 const vtrPlansWatcher = require('./vtr');
 const gtdPlansWatcher = require('./gtd');
