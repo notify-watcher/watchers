@@ -13,6 +13,7 @@ async function waitAndClick(page, selector) {
 async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
   const browser = await puppeteer.launch({
     // headless: false,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: {
       width: 1520,
       height: 1520,
