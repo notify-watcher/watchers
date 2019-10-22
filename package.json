@@ -24,7 +24,9 @@
   "scripts": {
     "dev": "nodemon index.js",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "release": "standard-version",
+    "postrelease": "git push --follow-tags && npm publish"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -40,6 +42,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "nodemon": "^1.19.4",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "standard-version": "^7.0.0"
   }
 }
