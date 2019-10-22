@@ -1,5 +1,5 @@
 const {
-  constants: { AUTH_KEYS, AUTH_TYPE_KEYS, TIMEFRAMES },
+  constants: { AUTH_TYPE_KEYS, TIMEFRAMES },
 } = require('@notify-watcher/core');
 
 const GITHUB_NOTIFICATIONS = {
