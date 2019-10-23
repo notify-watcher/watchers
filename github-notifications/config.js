@@ -1,5 +1,5 @@
 const {
-  constants: { TIMEFRAMES },
+  constants: { AUTH_TYPE_KEYS, TIMEFRAMES },
 } = require('@notify-watcher/core');
 
 const GITHUB_NOTIFICATIONS = {
@@ -56,7 +56,13 @@ const config = {
   name: 'github-notifications',
   displayName: 'Github Notifications',
   description: 'Watcher for github notifications',
-  auth: true,
+  auth: {
+    token: {
+      type: AUTH_TYPE_KEYS.string,
+      description:
+        "A Github personal access token token with access to notifications. To create one go to https://github.com/settings/tokens and create a new token with the 'notifications' scope.",
+    },
+  },
   libs: ['axios'],
   timeframe: {
     type: TIMEFRAMES.minute,

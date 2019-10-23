@@ -1,6 +1,21 @@
 {
   "extends": [
-    "eslint-config-airbnb-base",
-    "plugin:prettier/recommended"
-  ]
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended"
+  ],
+  "rules": {
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_id"
+        ]
+      }
+    ]
+  },
+  "env": {
+    "node": true,
+    "jest/globals": true
+  }
 }
