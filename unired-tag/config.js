@@ -14,7 +14,8 @@ const config = {
   },
   libs: ['puppeteer'],
   timeframe: {
-    type: TIMEFRAMES.minute,
+    type: TIMEFRAMES.day,
+    hour: 22,
   },
   notificationTypes: {
     updatedBallot: {
