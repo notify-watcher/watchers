@@ -60,7 +60,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
       const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
       const idText = id ? `#${id}` : '';
       notifications.push({
-        key: config.notificationTypes[reason].key,
+        type: config.notificationTypes[reason].key,
         message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
         metadata: {
           url: latestCommentUrl
