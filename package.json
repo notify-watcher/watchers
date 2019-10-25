@@ -25,8 +25,9 @@
     "dev": "nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "prerelease": "/scripts/prerelease.sh",
     "release": "standard-version",
-    "postrelease": "git push --follow-tags",
+    "postrelease": "git push --follow-tags && gh-release",
     "test": "jest --watchAll",
     "test:ci": "jest"
   },
@@ -44,6 +45,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^22.20.0",
     "eslint-plugin-prettier": "^3.1.1",
+    "gh-pages": "^2.1.1",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "prettier": "^1.18.2",
