@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* notification.type instead of notification.key (#40)
+* notification.type instead of notification.key ([#40](https://github.com/notify-watcher/watchers/issues/40)) ([57e9040](https://github.com/notify-watcher/watchers/commit/57e90400fd7fff211ef584d3d9c15112ddcf9981))
+
 
 ### Features
 
@@ -31,6 +32,3 @@ All notable changes to this project will be documented in this file. See [standa
 * **github-notifications:** possible undefined response if no connection ([23c1b2c](https://github.com/notify-watcher/watchers/commit/23c1b2c8025d9b8b8d5aae4109f8ca73ee6e6443))
 * **github-notifications:** sometimes latestCommentUrl is null ([#24](https://github.com/notify-watcher/watchers/issues/24)) ([eb94fe1](https://github.com/notify-watcher/watchers/commit/eb94fe15d2927bd3486f05a3ed6b9efca21597bb))
 * **vtr:** typo ([dce6108](https://github.com/notify-watcher/watchers/commit/dce6108067c3e9a290ab39362fbe2c49678fffb0))
-
-
-* notification.type instead of notification.key ([#40](https://github.com/notify-watcher/watchers/issues/40)) ([57e9040](https://github.com/notify-watcher/watchers/commit/57e90400fd7fff211ef584d3d9c15112ddcf9981))
