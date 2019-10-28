@@ -3,7 +3,14 @@ const { fetchPlans, planEquals } = require('./gtd-plans');
 
 async function watch({ snapshot: previousSnapshot, libs }) {
   const { lodash, axios, cheerio } = libs;
-  const snapshot = await fetchPlans(axios, cheerio, lodash);
+  let snapshot;
+  try {
+    snapshot = await fetchPlans(axios, cheerio, lodash);
+  } catch (error) {
+    if (error.response) throw error.response;
+    throw error;
+  }
+
   const newPlans = lodash.differenceWith(
     snapshot,
     previousSnapshot,
