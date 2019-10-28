@@ -7,15 +7,10 @@ async function watch({ snapshot: previousSnapshot, libs }) {
   try {
     snapshot = await fetchPlans(axios, cheerio, lodash);
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('gtd error:', error);
-    // TODO: Notify server of the error
-    return {
-      snapshot,
-      notifications: [],
-      error,
-    };
+    if (error.response) throw error.response;
+    throw error;
   }
+
   const newPlans = lodash.differenceWith(
     snapshot,
     previousSnapshot,
