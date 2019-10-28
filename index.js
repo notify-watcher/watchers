@@ -3,105 +3,68 @@ const util = require('util');
 const { Executor } = require('@notify-watcher/executor');
 const githubNotificationsWatcher = require('./github-notifications');
 const gtdPlansWatcher = require('./gtd');
-const uniredTag = require('./unired-tag');
+const uniredTagWatcher = require('./unired-tag');
 const vtrPlansWatcher = require('./vtr');
 
 const executor = new Executor();
 
-function log(data) {
-  const { error, ...otherData } = data;
-  const errorKey = error && error.key;
-  console.log(
-    util.inspect(
-      { ...otherData, errorKey, error },
-      { showHidden: false, depth: 2 },
-    ),
-  );
+async function checkAuth(watcher, auth) {
+  const authOk = await executor.run(watcher.checkAuth, { auth });
+  console.log(`# ${watcher.config.name} auth ${authOk}`);
+}
+
+async function runWatcher(watcher, snapshot, auth = {}) {
+  let data;
+  try {
+    data = await executor.run(watcher.watch, { snapshot, auth });
+  } catch (error) {
+    console.error(`# ${watcher.config.name} error\n${error}`);
+  }
+
+  const { snapshot: newSnapshot, notifications } = data;
+  const logData = {
+    previousSnapshot: snapshot,
+    newSnapshot,
+    notifications,
+  };
+  console.log(`# ${watcher.config.name}`);
+  console.log(util.inspect(logData, { showHidden: false, depth: 2 }));
+  return data;
+}
+
+async function runWatcherTwice(watcher, auth = {}) {
+  const data = await runWatcher(watcher, {}, auth);
+  await runWatcher(watcher, data.snapshot, auth);
 }
 
 // eslint-disable-next-line no-unused-vars
 async function checkAuthGithubNotifications() {
-  const authOk = await executor.run(githubNotificationsWatcher.checkAuth, {
-    auth: { token: process.env.GITHUB_NOTIFICATIONS_TOKEN },
+  await checkAuth(githubNotificationsWatcher, {
+    token: process.env.GITHUB_NOTIFICATIONS_TOKEN,
   });
-  console.log('authOk:', authOk);
 }
 
 // eslint-disable-next-line no-unused-vars
 async function watchGithubNotifications() {
-  const { snapshot, notifications, error = {} } = await executor.run(
-    githubNotificationsWatcher.watch,
-    {
-      snapshot: {
-        // ifModifiedSince: "Fri, 04 Oct 2019 21:45:01 GMT"
-      },
-      auth: { token: process.env.GITHUB_NOTIFICATIONS_TOKEN },
-    },
-  );
-  console.log('new snapshot:', snapshot);
-  console.log('notifications:', notifications);
-  console.log('error.key:', error.key);
-}
-
-// eslint-disable-next-line no-unused-vars
-async function watchVtrPlans() {
-  const { snapshot, notifications, error = {} } = await executor.run(
-    vtrPlansWatcher.watch,
-    {
-      snapshot: {},
-    },
-  );
-  console.log('new snapshot:', snapshot);
-  console.log('notifications:', notifications);
-  console.log('error.key:', error.key);
-}
-
-// eslint-disable-next-line no-unused-vars
-async function watchGtdPlans() {
-  const { snapshot, notifications, error = {} } = await executor.run(
-    gtdPlansWatcher.watch,
-    {
-      snapshot: {},
-    },
-  );
-  console.log('new snapshot:', snapshot);
-  console.log('notifications:', notifications);
-  console.log('error.key:', error.key);
+  await runWatcherTwice('github-notifications', githubNotificationsWatcher, {
+    token: process.env.GITHUB_NOTIFICATIONS_TOKEN,
+  });
 }
 
 // eslint-disable-next-line no-unused-vars
 async function watchUniredTag() {
-  const data1 = await executor.run(uniredTag.watch, {
-    snapshot: {},
-    auth: { rut: process.env.RUT },
-  });
-  log({
-    previousSnapshot: {},
-    newSnapshot: data1.snapshot,
-    notifications: data1.notifications,
-    error: data1.error,
-  });
-
-  const data2 = await executor.run(uniredTag.watch, {
-    snapshot: data1.snapshot,
-    auth: { rut: process.env.RUT },
-  });
-  log({
-    previousSnapshot: data1.snapshot,
-    newSnapshot: data2.snapshot,
-    notifications: data2.notifications,
-    error: data2.error,
+  await runWatcherTwice('unired-tag', uniredTagWatcher, {
+    rut: process.env.rut,
   });
 }
 
-[
+Promise.all([
   /* 
     Add other watchWatcher here to develop
     Comment to avoid calling
   */
-  // checkAuthGithubNotifications,
-  // watchGithubNotifications,
-  // watchVtrPlans,
-  // watchGtdPlans,
-  // watchUniredTag,
-].forEach(watch => watch());
+  checkAuthGithubNotifications(),
+  watchGithubNotifications(),
+  runWatcherTwice(vtrPlansWatcher),
+  runWatcherTwice(gtdPlansWatcher),
+]);
