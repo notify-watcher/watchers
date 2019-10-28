@@ -1,6 +1,3 @@
-const {
-  constants: { ERRORS },
-} = require('@notify-watcher/core');
 const config = require('./config');
 
 const GITHUB_AUTH_URL = 'https://api.github.com/user';
