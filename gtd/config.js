@@ -14,7 +14,7 @@ module.exports = {
   },
   notificationTypes: {
     newPlan: {
-      key: 'newPlan',
+      type: 'newPlan',
       description: 'When a new plan is found',
     },
   },

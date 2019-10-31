@@ -54,7 +54,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
 
   if (data.length > 0) {
     notifications.push({
-      type: config.notificationTypes.newNotifications.key,
+      type: config.notificationTypes.newNotifications.type,
       message: `You have ${data.length} new notifications`,
     });
   }
@@ -72,7 +72,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
     const id = url.match(NOTIFICATION_URL_ID_REGEX)[1];
     const idText = id ? `#${id}` : '';
     notifications.push({
-      type: config.notificationTypes[reason].key,
+      type: config.notificationTypes[reason].type,
       message: `${fullName}${idText} ${title} - ${type} ${updatedOrCreatedMessage}`,
       metadata: {
         url: latestCommentUrl

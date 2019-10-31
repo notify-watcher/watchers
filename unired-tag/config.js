@@ -19,7 +19,7 @@ const config = {
   },
   notificationTypes: {
     updatedBallot: {
-      key: 'updatedBallot',
+      type: 'updatedBallot',
       description: 'Your Tag ballot changed.',
     },
   },
