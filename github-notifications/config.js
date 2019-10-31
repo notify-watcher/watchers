@@ -4,50 +4,50 @@ const {
 
 const GITHUB_NOTIFICATIONS = {
   assign: {
-    key: 'assign',
+    type: 'assign',
     description: 'You were assigned to the issue.',
   },
   author: {
-    key: 'author',
+    type: 'author',
     description: 'You created the thread.',
   },
   comment: {
-    key: 'comment',
+    type: 'comment',
     description: 'You commented on the thread.',
   },
   invitation: {
-    key: 'invitation',
+    type: 'invitation',
     description: 'You accepted an invitation to contribute to the repository.',
   },
   manual: {
-    key: 'manual',
+    type: 'manual',
     description: 'You subscribed to the thread (via an issue or pull request).',
   },
   mention: {
-    key: 'mention',
+    type: 'mention',
     description: 'You were specifically @mentioned in the content.',
   },
   review_requested: {
-    key: 'review_requested',
+    type: 'review_requested',
     description:
       "You, or a team you're a member of, were requested to review a pull request.",
   },
   security_alert: {
-    key: 'security_alert',
+    type: 'security_alert',
     description:
       'GitHub discovered a security vulnerability in your repository.',
   },
   state_change: {
-    key: 'state_change',
+    type: 'state_change',
     description:
       'You changed the thread state (for example, closing an issue or merging a pull request).',
   },
   subscribed: {
-    key: 'subscribed',
+    type: 'subscribed',
     description: "You're watching the repository.",
   },
   team_mention: {
-    key: 'team_mention',
+    type: 'team_mention',
     description: 'You were on a team that was mentioned.',
   },
 };
@@ -70,7 +70,7 @@ const config = {
   notificationTypes: {
     ...GITHUB_NOTIFICATIONS,
     newNotifications: {
-      key: 'newNotifications',
+      type: 'newNotifications',
       description: 'You have new notifications available.',
     },
   },
