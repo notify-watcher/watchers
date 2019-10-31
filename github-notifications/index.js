@@ -54,7 +54,7 @@ async function watch({ snapshot, auth: { token }, libs: { axios } }) {
 
   if (data.length > 0) {
     notifications.push({
-      key: config.notificationTypes.newNotifications.key,
+      type: config.notificationTypes.newNotifications.key,
       message: `You have ${data.length} new notifications`,
     });
   }
