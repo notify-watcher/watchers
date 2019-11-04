@@ -22,7 +22,7 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
 
   // this popup hides the buttons, but maybe they'll remove it
   // and this watcher shouldn't fail because it doesn't find it
-  await page.click('#irAUnired').catch(() => { });
+  await page.click('#irAUnired').catch(() => {});
 
   await waitAndClick(page, '#IdEmpresaRubro_autocomplete');
   await page.keyboard.type('Tag Total');
