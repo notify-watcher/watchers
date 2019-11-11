@@ -60,7 +60,7 @@ async function watchGithubNotifications() {
 // eslint-disable-next-line no-unused-vars
 async function watchUniredTag() {
   await runWatcherTwice(uniredTagWatcher, {
-    rut: process.env.rut,
+    rut: process.env.RUT,
   });
 }
 
@@ -71,6 +71,7 @@ Promise.all([
   */
   // checkAuthGithubNotifications(),
   // watchGithubNotifications(),
+  // watchUniredTag(),
   // runWatcherTwice(vtrPlansWatcher),
   // runWatcherTwice(gtdPlansWatcher),
 ]);

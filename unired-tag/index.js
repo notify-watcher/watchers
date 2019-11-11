@@ -25,7 +25,7 @@ async function watch({ auth: { rut }, libs: { puppeteer }, snapshot }) {
   await page.click('#irAUnired').catch(() => {});
 
   await waitAndClick(page, '#IdEmpresaRubro_autocomplete');
-  await page.keyboard.type('Tag Total');
+  await page.keyboard.type('Tag Total', { delay: 10 });
   await waitAndClick(page, '.ui-corner-all');
   await waitAndClick(page, '#express_continuar');
 
