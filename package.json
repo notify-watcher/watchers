@@ -26,7 +26,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "release": "standard-version",
-    "postrelease": "git push --follow-tags && gh-release -y",
+    "postrelease": "git push --follow-tags",
     "test": "jest --watchAll",
     "test:ci": "jest"
   },
